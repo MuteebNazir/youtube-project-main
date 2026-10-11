@@ -12,6 +12,8 @@ const VideoCard = ({ info }) => {
 
   const { url } = medium || {};
 
+  const isMenuOpen = useSelector((store) => store.youtube.isMenuOpen);
+
   // console.log(snippet)
   const formatViewCount = (count) => {
     if (Number(count) >= 1_000_000) {
