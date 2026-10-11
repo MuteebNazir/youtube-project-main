@@ -44,6 +44,11 @@ const SearchResults = () => {
         return;
       }
 
+      // 2️⃣ Videos API (get stats + snippet)
+      const detailsResponse = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${GOOGLE_API_KEY}`,
+      );
+
       if (!detailsResponse.ok) {
         const text = await detailsResponse.text();
         throw new Error(`Videos API failed: ${text}`);
