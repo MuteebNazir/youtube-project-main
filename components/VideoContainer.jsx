@@ -64,6 +64,11 @@ const VideoContainer = () => {
         const searchJson = await searchRes.json();
         apiNextPageToken = searchJson.nextPageToken;
 
+        const videoIds = (searchJson.items || [])
+          .map((item) => item.id?.videoId)
+          .filter(Boolean)
+          .join(",");
+
         if (videoIds) {
           // 2. Fetch video details (to get statistics & contentDetails)
           const detailsUrl = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${GOOGLE_API_KEY}`;

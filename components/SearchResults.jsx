@@ -24,7 +24,7 @@ const SearchResults = () => {
     try {
       // 1️⃣ Search API
       const searchResponse = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${searchQuery}&key=${GOOGLE_API_KEY}`
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${searchQuery}&key=${GOOGLE_API_KEY}`,
       );
 
       if (!searchResponse.ok) {
@@ -44,11 +44,6 @@ const SearchResults = () => {
         return;
       }
 
-      // 2️⃣ Videos API (get stats + snippet)
-      const detailsResponse = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${GOOGLE_API_KEY}`
-      );
-
       if (!detailsResponse.ok) {
         const text = await detailsResponse.text();
         throw new Error(`Videos API failed: ${text}`);
@@ -59,22 +54,24 @@ const SearchResults = () => {
 
       // 3️⃣ Channels API (batch in groups of 50)
       const channelIds = Array.from(
-        new Set(videosWithDetails.map((v) => v.snippet?.channelId).filter(Boolean))
+        new Set(
+          videosWithDetails.map((v) => v.snippet?.channelId).filter(Boolean),
+        ),
       );
 
       const channelMap = {};
       for (let i = 0; i < channelIds.length; i += 50) {
         const batchIds = channelIds.slice(i, i + 50).join(",");
         const channelResponse = await fetch(
-          `https://youtube.googleapis.com/youtube/v3/channels?part=snippet&id=${batchIds}&key=${GOOGLE_API_KEY}`
+          `https://youtube.googleapis.com/youtube/v3/channels?part=snippet&id=${batchIds}&key=${GOOGLE_API_KEY}`,
         );
 
         if (!channelResponse.ok) continue;
 
-    
         const channelJson = await channelResponse.json();
         (channelJson.items || []).forEach((ch) => {
-          channelMap[ch.id] = ch.snippet?.thumbnails?.default?.url || "/default-logo.png";
+          channelMap[ch.id] =
+            ch.snippet?.thumbnails?.default?.url || "/default-logo.png";
         });
       }
 
@@ -97,7 +94,7 @@ const SearchResults = () => {
   if (loading) return <p>Loading.....</p>;
   if (error) return <p>{error}</p>;
 
-  console.log(videos)
+  console.log(videos);
 
   return (
     <div className="search-final-wrapper">
@@ -110,7 +107,9 @@ const SearchResults = () => {
           <div className="search-final-container">
             <div>
               <img
-                src={video.snippet?.thumbnails?.medium?.url || "/default-thumb.png"}
+                src={
+                  video.snippet?.thumbnails?.medium?.url || "/default-thumb.png"
+                }
                 alt={video.snippet?.title || "Video thumbnail"}
                 className="search-final-image"
                 width={500}
@@ -118,7 +117,9 @@ const SearchResults = () => {
             </div>
             <div className="search-final-title-views-logo-container">
               <div>
-                <p className="search-title">{video.snippet?.title || "No title"}</p>
+                <p className="search-title">
+                  {video.snippet?.title || "No title"}
+                </p>
                 <div className="search-views-publish-dot-container">
                   <p className="search-views-publish">
                     {value_convertor(video.statistics?.viewCount) || 0} views
@@ -137,15 +138,19 @@ const SearchResults = () => {
                   {video.snippet?.channelTitle || "Unknown channel"}
                 </p>
               </div>
-                <p className="search-final-description">{video.snippet?.description? video.snippet.description.slice(0, 110) + "..." : "No description"}</p>
-              <div className="search-final-box-container"> 
-                <div className="search-final-box" >
-                    <p>4K</p>
+              <p className="search-final-description">
+                {video.snippet?.description ?
+                  video.snippet.description.slice(0, 110) + "..."
+                : "No description"}
+              </p>
+              <div className="search-final-box-container">
+                <div className="search-final-box">
+                  <p>4K</p>
                 </div>
-                <div className="search-final-box1" >
-                    <p>CC</p>
+                <div className="search-final-box1">
+                  <p>CC</p>
                 </div>
-            </div>
+              </div>
             </div>
           </div>
         </Link>
