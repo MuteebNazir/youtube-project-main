@@ -34,6 +34,17 @@ const ButtonList = () => {
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
+  const isSelected = (item) => {
+    if (!category || category === 0) {
+      return item.name === "All";
+    }
+    if (typeof category === "object") {
+      return category.name === item.name;
+    }
+    // category is a number or string ID
+    return category === item.id;
+  };
+
   const checkScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
