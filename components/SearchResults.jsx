@@ -11,21 +11,11 @@ const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("search_query");
 
-  useEffect(() => {
-    if (query?.trim()) {
-      fetchVideos(query);
-    }
-  }, [query]);
+ 
 
-  const fetchVideos = async (searchQuery) => {
-    setLoading(true);
-    setError(null);
+ 
 
-    try {
-      // 1️⃣ Search API
-      const searchResponse = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${searchQuery}&key=${GOOGLE_API_KEY}`,
-      );
+    
 
       if (!searchResponse.ok) {
         const text = await searchResponse.text();
