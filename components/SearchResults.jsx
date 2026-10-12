@@ -15,7 +15,11 @@ const SearchResults = () => {
 
  
 
-    
+    try {
+      // 1️⃣ Search API
+      const searchResponse = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${searchQuery}&key=${GOOGLE_API_KEY}`,
+      );
 
       if (!searchResponse.ok) {
         const text = await searchResponse.text();
