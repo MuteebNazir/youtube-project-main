@@ -11,9 +11,15 @@ const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("search_query");
 
- 
+  useEffect(() => {
+    if (query?.trim()) {
+      fetchVideos(query);
+    }
+  }, [query]);
 
- 
+  const fetchVideos = async (searchQuery) => {
+    setLoading(true);
+    setError(null);
 
     try {
       // 1️⃣ Search API
